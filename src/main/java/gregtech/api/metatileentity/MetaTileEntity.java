@@ -1198,6 +1198,7 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
         this.muffled = data.getBoolean(TAG_KEY_MUFFLED);
     }
 
+    @Override
     public boolean isValid() {
         return getHolder() != null && getHolder().isValid();
     }
