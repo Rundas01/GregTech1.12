@@ -584,8 +584,8 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
     }
 
     @Override
-    public boolean hasCover(@NotNull EnumFacing side) {
-        return covers.containsKey(side);
+    public boolean hasAnyCover() {
+        return !covers.isEmpty();
     }
 
     @Override
