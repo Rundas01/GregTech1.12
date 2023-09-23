@@ -309,7 +309,6 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
      *
      * @param creativeTab The creative tab to check
      * @return Whether this MTE belongs in the creative tab or not
-     *
      * @see gregtech.api.block.machines.MachineItemBlock#addCreativeTab(CreativeTabs) MachineItemBlock#addCreativeTab(CreativeTabs)
      */
     public boolean isInCreativeTab(CreativeTabs creativeTab) {
@@ -370,6 +369,7 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
 
     /**
      * Get a trait by name
+     *
      * @param name the name of the trait
      * @return the trait associated with the name
      */
@@ -451,8 +451,7 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
 
             if (result == EnumActionResult.SUCCESS) {
                 return true;
-            }
-            else if (playerIn.isSneaking() && playerIn.getHeldItemMainhand().isEmpty()) {
+            } else if (playerIn.isSneaking() && playerIn.getHeldItemMainhand().isEmpty()) {
                 result = cover.onScrewdriverClick(playerIn, hand, hitResult);
 
                 return result == EnumActionResult.SUCCESS;
@@ -467,7 +466,7 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
      *
      * @return true if something happened, so tools will get damaged and animations will be played
      */
-    public final boolean onToolClick(EntityPlayer playerIn, @Nonnull Set<String> toolClasses, EnumHand hand, CuboidRayTraceResult hitResult)  {
+    public final boolean onToolClick(EntityPlayer playerIn, @Nonnull Set<String> toolClasses, EnumHand hand, CuboidRayTraceResult hitResult) {
         // the side hit from the machine grid
         EnumFacing gridSideHit = CoverRayTracer.determineGridSideHit(hitResult);
         Cover cover = gridSideHit == null ? null : getCoverAtSide(gridSideHit);
@@ -590,13 +589,14 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
 
     @Override
     public void addCover(@NotNull EnumFacing side, @NotNull Cover cover) {
-        if (!covers.containsKey(side)) {
-            covers.put(side, cover);
+        // we checked before if the side already has a cover
+        covers.put(side, cover);
+        if (!getWorld().isRemote) {
             CoverSaveHandler.writeCoverPlacement(this, COVER_ATTACHED_MTE, side, cover);
-            notifyBlockUpdate();
-            markDirty();
-            onCoverPlacementUpdate();
         }
+        notifyBlockUpdate();
+        markDirty();
+        onCoverPlacementUpdate();
     }
 
     @Override
