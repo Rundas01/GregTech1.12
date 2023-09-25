@@ -78,12 +78,12 @@ public class CoverConveyor extends CoverBehavior implements CoverWithUI, ITickab
 
         if (coverHolder.getWorld() != null && coverHolder.getWorld().isRemote) {
             // tile at cover holder pos
-            TileEntity te = coverHolder.getWorld().getTileEntity(coverHolder.getPos());
+            TileEntity te = coverHolder.getTileEntityHere();
             if (te instanceof TileEntityItemPipe) {
                 ((TileEntityItemPipe) te).resetTransferred();
             }
             // tile neighbour to holder pos at attached side
-            te = coverHolder.getWorld().getTileEntity(coverHolder.getPos().offset(attachedSide));
+            te = coverHolder.getNeighbor(attachedSide);
             if (te instanceof TileEntityItemPipe) {
                 ((TileEntityItemPipe) te).resetTransferred();
             }
@@ -134,7 +134,7 @@ public class CoverConveyor extends CoverBehavior implements CoverWithUI, ITickab
     public void update() {
         long timer = coverHolder.getOffsetTimer();
         if (timer % 5 == 0 && isWorkingAllowed && itemsLeftToTransferLastSecond > 0) {
-            TileEntity tileEntity = coverHolder.getWorld().getTileEntity(coverHolder.getPos().offset(attachedSide));
+            TileEntity tileEntity = coverHolder.getNeighbor(attachedSide);
             IItemHandler itemHandler = tileEntity == null ? null : tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, attachedSide.getOpposite());
             IItemHandler myItemHandler = coverHolder.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, attachedSide);
             if (itemHandler != null && myItemHandler != null) {
@@ -491,8 +491,8 @@ public class CoverConveyor extends CoverBehavior implements CoverWithUI, ITickab
                 ManualImportExportMode.class, this::getManualImportExportMode, this::setManualImportExportMode)
                 .setTooltipHoverString("cover.universal.manual_import_export.mode.description"));
 
-        if (coverHolder.getWorld().getTileEntity(coverHolder.getPos()) instanceof TileEntityItemPipe ||
-                coverHolder.getWorld().getTileEntity(coverHolder.getPos().offset(attachedSide)) instanceof TileEntityItemPipe) {
+        if (coverHolder.getTileEntityHere() instanceof TileEntityItemPipe ||
+                coverHolder.getNeighbor(attachedSide) instanceof TileEntityItemPipe) {
             final ImageCycleButtonWidget distributionModeButton = new ImageCycleButtonWidget(149, 166, 20, 20, GuiTextures.DISTRIBUTION_MODE, 3,
                     () -> distributionMode.ordinal(),
                     val -> setDistributionMode(DistributionMode.values()[val]))

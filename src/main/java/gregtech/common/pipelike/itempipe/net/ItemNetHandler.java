@@ -15,7 +15,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -76,8 +75,8 @@ public class ItemNetHandler implements IItemHandler {
         }
 
         copyTransferred();
-        CoverBehavior pipeCover = getCoverOnPipe(pipe.getPipePos(), facing);
-        CoverBehavior tileCover = getCoverOnNeighbour(pipe.getPipePos(), facing);
+        CoverBehavior pipeCover = this.pipe.getCoverableImplementation().getCoverAtSide(facing);
+        CoverBehavior tileCover = getCoverOnNeighbour(this.pipe, facing);
 
         boolean pipeConveyor = pipeCover instanceof CoverConveyor, tileConveyor = tileCover instanceof CoverConveyor;
         // abort if there are two conveyors
@@ -304,8 +303,16 @@ public class ItemNetHandler implements IItemHandler {
         if (allowed == 0 || !handler.matchesFilters(stack)) {
             return stack;
         }
-        CoverBehavior pipeCover = getCoverOnPipe(handler.getPipePos(), handler.getFaceToHandler());
-        CoverBehavior tileCover = getCoverOnNeighbour(handler.getPipePos(), handler.getFaceToHandler());
+        CoverBehavior pipeCover;
+        CoverBehavior tileCover;
+        TileEntity pipeTe = this.pipe.getWorld().getTileEntity(handler.getPipePos());
+        if (pipeTe instanceof TileEntityItemPipe itemPipe) {
+            pipeCover = itemPipe.getCoverableImplementation().getCoverAtSide(handler.getFaceToHandler());
+            tileCover = getCoverOnNeighbour(itemPipe, handler.getFaceToHandler());
+        } else {
+            // something went wrong
+            return stack;
+        }
         if (pipeCover != null) {
             testHandler.setStackInSlot(0, stack.copy());
             IItemHandler itemHandler = pipeCover.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, testHandler);
@@ -343,21 +350,12 @@ public class ItemNetHandler implements IItemHandler {
         return remainder;
     }
 
-    public CoverBehavior getCoverOnPipe(BlockPos pos, EnumFacing handlerFacing) {
-        TileEntity tile = pipe.getWorld().getTileEntity(pos);
-        if (tile instanceof TileEntityItemPipe) {
-            ICoverable coverable = ((TileEntityItemPipe) tile).getCoverableImplementation();
-            return coverable.getCoverAtSide(handlerFacing);
-        }
-        return null;
-    }
-
-    public CoverBehavior getCoverOnNeighbour(BlockPos pos, EnumFacing handlerFacing) {
-        TileEntity tile = pipe.getWorld().getTileEntity(pos.offset(handlerFacing));
+    public CoverBehavior getCoverOnNeighbour(TileEntityItemPipe itemPipe, EnumFacing facing) {
+        TileEntity tile = itemPipe.getNeighbor(facing);
         if (tile != null) {
-            ICoverable coverable = tile.getCapability(GregtechTileCapabilities.CAPABILITY_COVERABLE, handlerFacing.getOpposite());
+            ICoverable coverable = tile.getCapability(GregtechTileCapabilities.CAPABILITY_COVERABLE, facing.getOpposite());
             if (coverable == null) return null;
-            return coverable.getCoverAtSide(handlerFacing.getOpposite());
+            return coverable.getCoverAtSide(facing.getOpposite());
         }
         return null;
     }

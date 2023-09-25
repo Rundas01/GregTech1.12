@@ -66,7 +66,7 @@ public class MetaTileEntityLaserHatch extends MetaTileEntityMultiblockPart imple
 
     private ILaserContainer inputContainerSupplier() {
         EnumFacing side = getFrontFacing();
-        TileEntity tileEntity = getWorld().getTileEntity(getPos().offset(side));
+        TileEntity tileEntity = getNeighbor(side);
         EnumFacing oppositeSide = side.getOpposite();
         if (tileEntity != null && tileEntity.hasCapability(GregtechTileCapabilities.CAPABILITY_LASER, oppositeSide)) {
             return tileEntity.getCapability(GregtechTileCapabilities.CAPABILITY_LASER, oppositeSide);

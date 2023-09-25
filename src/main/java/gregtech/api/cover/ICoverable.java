@@ -14,6 +14,7 @@ import gregtech.client.utils.RenderUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -36,6 +38,11 @@ public interface ICoverable {
     World getWorld();
 
     BlockPos getPos();
+
+    TileEntity getTileEntityHere();
+
+    @Nullable
+    TileEntity getNeighbor(EnumFacing facing);
 
     long getOffsetTimer();
 

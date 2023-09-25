@@ -15,13 +15,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -286,6 +287,16 @@ public class PipeCoverableImplementation implements ICoverable {
     @Override
     public BlockPos getPos() {
         return holder.getPipePos();
+    }
+
+    @Override
+    public TileEntity getTileEntityHere() {
+        return holder instanceof TileEntity te ? te : getWorld().getTileEntity(getPos());
+    }
+
+    @Override
+    public @Nullable TileEntity getNeighbor(EnumFacing facing) {
+        return holder.getNeighbor(facing);
     }
 
     @Override
