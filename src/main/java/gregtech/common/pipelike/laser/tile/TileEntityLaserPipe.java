@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 
 public class TileEntityLaserPipe extends TileEntityPipeBase<LaserPipeType, LaserPipeProperties> {
+
     private final EnumMap<EnumFacing, LaserNetHandler> handlers = new EnumMap<>(EnumFacing.class);
     // the LaserNetHandler can only be created on the server, so we have an empty placeholder for the client
     private final ILaserContainer clientCapability = new DefaultLaserContainer();

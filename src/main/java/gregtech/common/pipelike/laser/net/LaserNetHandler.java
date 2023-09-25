@@ -10,16 +10,15 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class LaserNetHandler implements ILaserContainer {
+
     private LaserPipeNet net;
     private final TileEntityLaserPipe pipe;
     private final EnumFacing facing;
-    private final World world;
 
     public LaserNetHandler(LaserPipeNet net, @Nonnull TileEntityLaserPipe pipe, @Nullable EnumFacing facing) {
         this.net = net;
         this.pipe = pipe;
         this.facing = facing;
-        this.world = pipe.getWorld();
     }
 
     public void updateNetwork(LaserPipeNet net) {
@@ -46,12 +45,12 @@ public class LaserNetHandler implements ILaserContainer {
             return null;
         }
 
-        LaserPipeNet.LaserData data = net.getNetData(pipe.getPipePos(), facing);
+        LaserRoutePath data = net.getNetData(pipe.getPipePos(), facing);
         if (data == null) {
             return null;
         }
 
-        ILaserContainer handler = data.getHandler(world);
+        ILaserContainer handler = data.getHandler();
         if (seen.contains(handler)) {
             return null;
         }

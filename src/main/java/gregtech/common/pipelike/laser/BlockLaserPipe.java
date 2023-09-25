@@ -41,7 +41,7 @@ public class BlockLaserPipe extends BlockPipe<LaserPipeType, LaserPipeProperties
 
     public BlockLaserPipe(@Nonnull LaserPipeType pipeType) {
         this.pipeType = pipeType;
-        this.properties = new LaserPipeProperties();
+        this.properties = LaserPipeProperties.INSTANCE;
         setCreativeTab(GregTechAPI.TAB_GREGTECH_PIPES);
         setHarvestLevel(ToolClasses.WIRE_CUTTER, 1);
     }
@@ -88,7 +88,7 @@ public class BlockLaserPipe extends BlockPipe<LaserPipeType, LaserPipeProperties
 
     @Override
     protected LaserPipeProperties getFallbackType() {
-        return new LaserPipeProperties();
+        return LaserPipeProperties.INSTANCE;
     }
 
     @Override
