@@ -607,6 +607,11 @@ public abstract class MetaTileEntity implements CoverHolder, IVoidable {
         return !CoverUtil.doesCoverCollide(side, collisionList, getCoverPlateThickness());
     }
 
+    @Override
+    public final boolean acceptsCovers() {
+        return covers.size() < EnumFacing.VALUES.length;
+    }
+
     /**
      * @param side the side to remove a cover from
      */

@@ -391,7 +391,7 @@ public abstract class TileEntityPipeBase<PipeType extends Enum<PipeType> & IPipe
         }
 
         this.coverableImplementation.readFromNBT(compound);
-        if (this.tickingPipe != null && this.coverableImplementation.getCoverCount() > 1) {
+        if (this.tickingPipe != null && this.coverableImplementation.hasAnyCover()) {
             // one of the covers set the pipe to ticking, and we need to send over the rest of the covers
             this.coverableImplementation.transferDataTo(this.tickingPipe.coverableImplementation);
         }
@@ -440,7 +440,7 @@ public abstract class TileEntityPipeBase<PipeType extends Enum<PipeType> & IPipe
             this.frameMaterial = null;
         }
         this.coverableImplementation.readInitialSyncData(buf);
-        if (this.tickingPipe != null && this.coverableImplementation.getCoverCount() > 1) {
+        if (this.tickingPipe != null && this.coverableImplementation.hasAnyCover()) {
             // one of the covers set the pipe to ticking, and we need to send over the rest of the covers
             this.coverableImplementation.transferDataTo(this.tickingPipe.coverableImplementation);
         }
