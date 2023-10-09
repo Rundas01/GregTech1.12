@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * Also delivers most of the Informations about TileEntities.
  * <p/>
  */
-public interface IGregTechTileEntity extends IHasWorldObjectAndCoords, IUIHolder {
+public interface IGregTechTileEntity extends IHasWorldObjectAndCoords, INeighborCache, IUIHolder {
 
     MetaTileEntity getMetaTileEntity();
 
